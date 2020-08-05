@@ -7,27 +7,22 @@
 
 // ListSingle
 
-ListSingle list_single_create(Type data_type)
+ListSingle list_single_construct(Type *type)
 {
-    ListSingle list = {data_type, 0};
+    ListSingle list = {type, 0};
     return list;
 }
 
-// Inserts a new node at the start of the linked list
-// copying the data provided
 void list_single_add(ListSingle *list, void *data)
 {
     if (!data) return;  // Passed no data
     ListSingleNode *node = malloc(sizeof(ListSingleNode));
-    node->data = malloc(list->data_type.size);
-    list->data_type.copy(data, node->data);
+    node->data = malloc(list->type->size);
+    type_copy(list->type, data, node->data);
     node->next = list->head;
     list->head = node;
 }
 
-// Destroys the node specified, and destroys the data using
-// the provided destroy_data function.
-// If node is NULL, or cannot be found, nothing is done
 void list_single_remove(ListSingle *list, ListSingleNode *node)
 {
     if (!node || !list->head) return;
@@ -39,7 +34,7 @@ void list_single_remove(ListSingle *list, ListSingleNode *node)
             } else {
                 list->head = iter->next;
             }
-            list->data_type.destroy(node->data);
+            type_destruct(list->type, node->data);
             free(node);
             break;
         }
@@ -48,24 +43,24 @@ void list_single_remove(ListSingle *list, ListSingleNode *node)
     }
 }
 
-void list_single_destroy(ListSingle *list)
+void list_single_destruct(ListSingle *list)
 {
     ListSingleNode *iter, *next;
     iter = list->head;
     while (iter) {
         next = iter->next;
-        list->data_type.destroy(iter->data);
+        type_destruct(list->type, iter->data);
         free(iter);
         iter = next;
     }
 }
 
-// === ListDouble ===
 
-ListDouble list_double_create(Type data_type)
+// ListDouble
+
+ListDouble list_double_construct(Type *type)
 {
-    ListDouble list = {data_type, 0, 0};
-    return list;
+    return (ListDouble){type, 0, 0};
 }
 
 // Adds nodes to the start of the list such that it matches the
@@ -75,8 +70,8 @@ void list_double_add(ListDouble *list, void *data)
 {
     if (!data) return;  // Passed no data
     ListDoubleNode *node = malloc(sizeof(ListDoubleNode));
-    node->data = malloc(list->data_type.size);
-    list->data_type.copy(data, node->data);
+    node->data = malloc(list->type->size);
+    type_copy(list->type, data, node->data);
     node->next = list->head;
     node->prev = NULL;
     list->head = node;
@@ -95,7 +90,7 @@ void list_double_remove(ListDouble *list, ListDoubleNode *node)
     } else {
         list->tail = node->prev;
     }
-    list->data_type.destroy(node->data);
+    type_destruct(list->type, node->data);
     free(node);
 }
 
@@ -105,26 +100,25 @@ void list_double_destroy(ListDouble *list)
     iter = list->head;
     while (iter) {
         next = iter->next;
-        list->data_type.destroy(iter->data);
+        type_destruct(list->type, iter->data);
         free(iter);
         iter = next;
     }
 }
 
 
-// === ListCircle ===
+// ListCircle
 
-ListCircle list_circle_create(Type data_type)
+ListCircle list_circle_construct(Type *type)
 {
-    ListCircle list = {data_type, 0};
-    return list;
+    return (ListCircle){type, 0};
 }
 
 void list_circle_add(ListCircle *list, void *data)
 {
     ListCircleNode *node = malloc(sizeof(ListCircleNode));
-    node->data = malloc(list->data_type.size);
-    list->data_type.copy(data, node->data);
+    node->data = malloc(list->type->size);
+    type_copy(list->type, data, node->data);
     if (!list->head) {
         node->next = node;
     } else {
@@ -142,7 +136,7 @@ void list_circle_remove(ListCircle *list, ListCircleNode *node)
         if (iter == node) {
             prev->next = iter->next;
             list->head = node->next;
-            list->data_type.destroy(node->data);
+            type_destruct(list->type, node->data);
             free(node);
             break;
         }
@@ -152,48 +146,43 @@ void list_circle_remove(ListCircle *list, ListCircleNode *node)
     // Either the item isn't present, or there is just one item
     if (node == iter) {
         list->head = NULL;
-        list->data_type.destroy(node->data);
+        type_destruct(list->type, node->data);
         free(node);
     }
 }
 
-void list_circle_destroy(ListCircle *list)
+void list_circle_destruct(ListCircle *list)
 {
     ListCircleNode *iter, *next;
     iter = list->head;
     while (iter) {
         next = iter->next;
-        list->data_type.destroy(iter->data);
+        type_destruct(list->type, iter->data);
         free(iter);
         iter = next;
     }
 }
 
 
-// === ListSingleOrdered ===
+// ListSingleOrdered
 
-ListSingleOrdered list_single_ordered_create(Type data_type)
+ListSingleOrdered list_single_ordered_construct(Type *type)
 {
-    ListSingleOrdered list = {data_type, 0};
-    return list;
+    return (ListSingleOrdered){type, 0};
 }
 
-// Iterates through the list until the new data is smaller than the
-// current node (iter), at which point the new node is inserted between
-// the previous value and iter
 void list_single_ordered_add(ListSingleOrdered *list, void *data)
 {
     ListSingleOrderedNode *node;
     node = malloc((sizeof *node));
-    type_copy(list->type, 
-    list->data_type.copy(data, node->data);
+    type_copy(list->type, data, node->data);
     if (!list->head) {
         list->head = node;
     } else {
         ListSingleOrderedNode *prev, *iter;
         prev = list->head;
         iter = prev->next;
-        while (iter && !list->data_type.compare(iter->data, data)) {
+        while (iter && !type_compare(list->type, iter->data, data)) {
             prev = iter;
             iter = iter->next;
         }
@@ -209,12 +198,11 @@ void list_single_ordered_remove(
 }
 
 
-// === ListDoubleOrdered ===
+// ListDoubleOrdered
 
-ListDoubleOrdered list_double_ordered_create(Type data_type)
+ListDoubleOrdered list_double_ordered_construct(Type *type)
 {
-    ListDoubleOrdered list = {data_type, 0, 0};
-    return list;
+    return (ListDoubleOrdered){type, 0, 0};
 }
 
 void list_double_ordered_add(ListDoubleOrdered *list, void *data);

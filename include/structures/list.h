@@ -14,14 +14,14 @@ typedef struct ListSingleNode {
 } ListSingleNode;
 
 typedef struct {
-    Type type;
+    Type *type;
     ListSingleNode *head;
 } ListSingle;
 
 ListSingle list_single_construct(Type *type);
 void list_single_add(ListSingle *list, void *data);
 void list_single_remove(ListSingle *list, ListSingleNode *node);
-ListSingle list_single_destruct(ListSingle *list);
+void list_single_destruct(ListSingle *list);
 
 
 // ListDouble
@@ -33,7 +33,7 @@ typedef struct ListDoubleNode {
 } ListDoubleNode;
 
 typedef struct {
-    Type type;
+    Type *type;
     ListDoubleNode *head;
     ListDoubleNode *tail;
 } ListDouble;
@@ -52,7 +52,7 @@ typedef ListSingle ListCircle;
 ListCircle list_circle_construct(Type *type);
 void list_circle_add(ListCircle *list, void *data);
 void list_circle_remove(ListCircle *list, ListCircleNode *node);
-ListCircle list_circle_destruct(ListCircle *list);
+void list_circle_destruct(ListCircle *list);
 
 
 // ListSingleOrdered
@@ -60,7 +60,7 @@ ListCircle list_circle_destruct(ListCircle *list);
 typedef ListSingleNode ListSingleOrderedNode;
 
 typedef struct {
-    Type type;
+    Type *type;
     ListSingleOrderedNode *head;
 } ListSingleOrdered;
 
@@ -77,7 +77,7 @@ void list_single_ordered_destruct(ListSingleOrdered *list);
 typedef ListDoubleNode ListDoubleOrderedNode;
 
 typedef struct {
-    Type type;
+    Type *type;
     ListDoubleOrderedNode *head;
     ListDoubleOrderedNode *tail;
 } ListDoubleOrdered;
