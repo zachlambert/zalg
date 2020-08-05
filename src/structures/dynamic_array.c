@@ -20,7 +20,7 @@ void dynamic_array_add(DynamicArray *array, void *data)
         } else {
             array->capacity *= 2;
         }
-        void *new_start = realloc(array->start, array->capacity);
+        void *new_start = realloc(array->start, array->capacity*array->type->size);
         array->end = new_start + (array->end - array->start);
         array->start = new_start;
     }

@@ -8,8 +8,7 @@
 bool is_less_int(void *a, void *b){ return *(int *)a < *(int *)b; }
 bool is_equal_int(void *a, void *b){ return *(int *)a == *(int *)b; }
 Type type_int_s = {
-    .size = sizeof(int),
-    .is_less = is_less_int,
+    .size = sizeof(int), .is_less = is_less_int,
     .is_equal = is_equal_int
 };
 Type *type_int = &type_int_s;
@@ -21,8 +20,9 @@ typedef struct {
 void copy_cstring(void *from, void *to)
 {
     cstring *from_cstring = from;
-    cstring *to_cstring = to_cstring;
+    cstring *to_cstring = to;
     to_cstring->data = malloc(strlen(from_cstring->data)+1);
+    strcpy(to_cstring->data, from_cstring->data);
 }
 void destruct_cstring(void *object)
 {
@@ -93,9 +93,8 @@ int main(void)
     string.data = "Goodbye";
     list_single_add(&list2, &string);
 
-    ListSingleNode *prev = list2.head;
     for (ListSingleNode *iter = list2.head; iter; iter = iter->next) {
-        printf("%s\n", ((cstring *)iter)->data);
+        printf("%s\n", ((cstring *)iter->data)->data);
     }
     return 0;
 }
