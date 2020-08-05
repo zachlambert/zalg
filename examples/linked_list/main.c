@@ -1,24 +1,53 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include <math.h>
 
-#include "structures/linked_list.h"
+#include "structures/list.h"
 
-
-void destroy_int(void *data)
-{
-    free((int*)data);
-}
+bool compare_int(void *a, void *b){ return *(int *)a < *(int *)b; }
+Type type_int_s = {.size = sizeof(int), .compare = compare_int };
+Type *type_int = &type_int_s;
 
 typedef struct {
-    double x;
-    double y;
-} Point;
+    char *data;
+} cstring;
 
-void destroy_point(void *data)
+void copy_cstring(void *from, void *to)
 {
-    free((Point*)data);
+    cstring *from_cstring = from;
+    cstring *to_cstring = to_cstring;
+    to_cstring->data = malloc(strlen(from_cstring->data)+1);
 }
+void destruct_cstring(void *object)
+{
+    free(((cstring *)object)->data);
+}
+void assign_cstring(void *from, void *to)
+{
+    cstring *to_cstring = to;
+    cstring *from_cstring = from;
+    if (strlen(to_cstring->data) < strlen(from_cstring->data)) {
+        to_cstring->data = realloc(
+            to_cstring->data,
+            strlen(from_cstring->data) + 1
+        ); // Need to allocate memory for the null terminator too
+    }
+    strcpy(to_cstring->data, from_cstring->data);
+}
+bool compare_cstring(void *a, void *b)
+{
+    return strcmp(((cstring *)a)->data, ((cstring *)b)->data);
+}
+
+Type type_cstring_s = {
+    .size = sizeof(cstring),
+    .copy = copy_cstring,
+    .destruct = destruct_cstring,
+    .assign = assign_cstring,
+    .compare = compare_cstring
+};
+Type *type_cstring = &type_cstring_s;
 
 int main(void)
 {
