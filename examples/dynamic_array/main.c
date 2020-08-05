@@ -1,16 +1,16 @@
-#include "structures/dynamic_array.h"
-
 #include <stdio.h>
 
-void double_destroy(void *object)
-{
-    free(object);
-}
+#include "structures/dynamic_array.h"
+#include "type.h"
+
+
+Type type_double_s = {.size = sizeof(double) }; // Not using comparisons
+Type *type_double = &type_double_s;
 
 int main(void)
 {
-    DataType dt_double;
-    DynamicArray array = dynamic_array_create(sizeof(double));
+    Type dt_double;
+    DynamicArray array = dynamic_array_construct(type_double);
     double data;
     data = 1.5;
     dynamic_array_add(&array, &data);

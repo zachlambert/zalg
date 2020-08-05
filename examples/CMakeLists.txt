@@ -5,5 +5,5 @@ function(add_example name)
     target_link_libraries(${name} zalg)
 endfunction()
 
-add_example(linked_list)
+add_example(list)
 add_example(dynamic_array)
