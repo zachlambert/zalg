@@ -11,4 +11,8 @@ typedef struct DataType {
     bool (*compare)(void *a, void *b);
 } DataType;
 
+void data_destroy(DataType *data_type, void *object);
+void data_copy(DataType *data_type, void *from, void *to);
+bool data_compare(DataType *data_type, void *a, void *b);
+
 #endif

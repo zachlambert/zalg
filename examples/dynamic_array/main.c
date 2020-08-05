@@ -2,8 +2,14 @@
 
 #include <stdio.h>
 
+void double_destroy(void *object)
+{
+    free(object);
+}
+
 int main(void)
 {
+    DataType dt_double;
     DynamicArray array = dynamic_array_create(sizeof(double));
     double data;
     data = 1.5;
