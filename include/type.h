@@ -25,15 +25,15 @@
 
 typedef struct {
     size_t size;
-    void (*copy)(void *object, void *from);
+    void (*copy)(void *from, void *to);
     void (*destruct)(void *object);
-    void (*assign)(void *object, void *from);
+    void (*assign)(void *from, void *to);
     bool (*compare)(void *a, void *b);
 } Type;
 
-void type_copy(Type *type, void *object, void *from);
+void type_copy(Type *type, void *from, void *to);
 void type_destruct(Type *type, void *object);
-void type_assign(Type *type, void *object, void *from);
+void type_assign(Type *type, void *from, void *to);
 bool type_compare(Type *type, void *a, void *b);
 
 

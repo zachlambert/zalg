@@ -34,8 +34,8 @@ void dynamic_array_remove(DynamicArray *array, size_t index)
     array->end -= array->type->size;
     type_assign(
         array->type,
-        array->start + index * array->type->size,
-        array->end
+        array->end,
+        array->start + index * array->type->size
     );
     type_destruct(array->type, array->end);
 }

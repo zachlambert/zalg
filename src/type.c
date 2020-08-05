@@ -3,11 +3,11 @@
 #include <string.h>
 
 
-void type_copy(Type *type, void *object, void *from) {
+void type_copy(Type *type, void *from, void *to) {
     if (type->copy) {
-        type->copy(object, from);
+        type->copy(from, to);
     } else {
-        memcpy(object, from, type->size);
+        memcpy(to, from, type->size);
     }
 }
 
@@ -18,12 +18,12 @@ void type_destruct(Type *type, void *object)
     }
 }
 
-void type_assign(Type *type, void *object, void *from)
+void type_assign(Type *type, void *from, void *to)
 {
     if (type->assign) {
-        type->assign(object, from);
+        type->assign(from, to);
     } else {
-        memcpy(object, from, type->size);
+        memcpy(to, from, type->size);
     }
 }
 

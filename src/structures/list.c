@@ -7,7 +7,7 @@
 
 // ListSingle
 
-ListSingle list_single_create(DataType data_type)
+ListSingle list_single_create(Type data_type)
 {
     ListSingle list = {data_type, 0};
     return list;
@@ -62,7 +62,7 @@ void list_single_destroy(ListSingle *list)
 
 // === ListDouble ===
 
-ListDouble list_double_create(DataType data_type)
+ListDouble list_double_create(Type data_type)
 {
     ListDouble list = {data_type, 0, 0};
     return list;
@@ -114,7 +114,7 @@ void list_double_destroy(ListDouble *list)
 
 // === ListCircle ===
 
-ListCircle list_circle_create(DataType data_type)
+ListCircle list_circle_create(Type data_type)
 {
     ListCircle list = {data_type, 0};
     return list;
@@ -172,7 +172,7 @@ void list_circle_destroy(ListCircle *list)
 
 // === ListSingleOrdered ===
 
-ListSingleOrdered list_single_ordered_create(DataType data_type)
+ListSingleOrdered list_single_ordered_create(Type data_type)
 {
     ListSingleOrdered list = {data_type, 0};
     return list;
@@ -185,6 +185,7 @@ void list_single_ordered_add(ListSingleOrdered *list, void *data)
 {
     ListSingleOrderedNode *node;
     node = malloc((sizeof *node));
+    type_copy(list->type, 
     list->data_type.copy(data, node->data);
     if (!list->head) {
         list->head = node;
@@ -210,7 +211,7 @@ void list_single_ordered_remove(
 
 // === ListDoubleOrdered ===
 
-ListDoubleOrdered list_double_ordered_create(DataType data_type)
+ListDoubleOrdered list_double_ordered_create(Type data_type)
 {
     ListDoubleOrdered list = {data_type, 0, 0};
     return list;
