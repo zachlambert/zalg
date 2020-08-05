@@ -5,8 +5,13 @@
 
 #include "structures/list.h"
 
-bool compare_int(void *a, void *b){ return *(int *)a < *(int *)b; }
-Type type_int_s = {.size = sizeof(int), .compare = compare_int };
+bool is_less_int(void *a, void *b){ return *(int *)a < *(int *)b; }
+bool is_equal_int(void *a, void *b){ return *(int *)a == *(int *)b; }
+Type type_int_s = {
+    .size = sizeof(int),
+    .is_less = is_less_int,
+    .is_equal = is_equal_int
+};
 Type *type_int = &type_int_s;
 
 typedef struct {
@@ -35,9 +40,13 @@ void assign_cstring(void *from, void *to)
     }
     strcpy(to_cstring->data, from_cstring->data);
 }
-bool compare_cstring(void *a, void *b)
+bool is_less_cstring(void *a, void *b)
 {
-    return strcmp(((cstring *)a)->data, ((cstring *)b)->data);
+    return (strcmp(((cstring *)a)->data, ((cstring *)b)->data) < 0);
+}
+bool is_equal_cstring(void *a, void *b)
+{
+    return (strcmp(((cstring *)a)->data, ((cstring *)b)->data) == 0);
 }
 
 Type type_cstring_s = {
@@ -45,15 +54,14 @@ Type type_cstring_s = {
     .copy = copy_cstring,
     .destruct = destruct_cstring,
     .assign = assign_cstring,
-    .compare = compare_cstring
+    .is_less = is_less_cstring,
+    .is_equal = is_equal_cstring
 };
 Type *type_cstring = &type_cstring_s;
 
 int main(void)
 {
-    ListSingle list = list_single_create(
-        sizeof(int), destroy_int
-    );
+    ListSingle list = list_single_construct(type_int);
 
     int data;
     data = 10;
@@ -64,43 +72,30 @@ int main(void)
     list_single_add(&list, &data);
 
     ListSingleNode *to_remove = NULL;
+    int search_value = 12;
     for (ListSingleNode *iter = list.head; iter; iter = iter->next) {
         printf("%i\n", *(int*)iter->data);
-        if (*(int*)iter->data == 12) to_remove = iter;
+        if (type_is_equal(list.type, iter->data, &search_value))
+            to_remove = iter;
     }
     list_single_remove(&list, to_remove);
+
     for (ListSingleNode *iter = list.head; iter; iter = iter->next) {
         printf("%i\n", *(int*)iter->data);
     }
 
-    ListSingle list2 = list_single_create(sizeof(Point), destroy_point);
-    Point point;
-    point.x = 0;
-    point.y = 100;
-    list_single_add(&list2, &point);
-    point.x = 100;
-    point.y = 100;
-    list_single_add(&list2, &point);
-    point.x = 0;
-    point.y = 0;
-    list_single_add(&list2, &point);
+    ListSingle list2 = list_single_construct(type_cstring);
+    cstring string;
+    string.data = "Hello";
+    list_single_add(&list2, &string);
+    string.data = "Zach";
+    list_single_add(&list2, &string);
+    string.data = "Goodbye";
+    list_single_add(&list2, &string);
 
     ListSingleNode *prev = list2.head;
-    if (prev && prev->next) {
-        ListSingleNode* iter = prev->next;
-        Point *a, *b;
-        double dist;
-        while (iter) {
-            a = prev->data;
-            b = iter->data;
-            dist = hypot(b->x - a->x, b->y - a->y);
-            printf(
-                "(%.2f, %.2f) -> (%.2f, %.2f) = dist %.2f\n",
-                a->x, a->y, b->x, b->y, dist
-            );
-            prev = iter;
-            iter = iter->next;
-        }
+    for (ListSingleNode *iter = list2.head; iter; iter = iter->next) {
+        printf("%s\n", ((cstring *)iter)->data);
     }
     return 0;
 }

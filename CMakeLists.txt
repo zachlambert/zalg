@@ -9,8 +9,9 @@ project(
 set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 
 set(SRC
-    src/structures/linked_list.c
+    src/structures/list.c
     src/structures/dynamic_array.c
+    src/type.c
 )
 
 add_library(zalg STATIC ${SRC})

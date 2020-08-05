@@ -27,9 +27,17 @@ void type_assign(Type *type, void *from, void *to)
     }
 }
 
-bool data_compare(Type *type, void *a, void *b) {
-    if (type->compare) {
-        return type->compare(a, b);
+bool type_is_less(Type *type, void *a, void *b) {
+    if (type->is_less) {
+        return type->is_less(a, b);
+    } else {
+        return false; // No sensible default
+    }
+}
+
+bool type_is_equal(Type *type, void *a, void *b) {
+    if (type->is_equal) {
+        return type->is_equal(a, b);
     } else {
         return false; // No sensible default
     }

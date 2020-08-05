@@ -182,7 +182,7 @@ void list_single_ordered_add(ListSingleOrdered *list, void *data)
         ListSingleOrderedNode *prev, *iter;
         prev = list->head;
         iter = prev->next;
-        while (iter && !type_compare(list->type, iter->data, data)) {
+        while (iter && !type_is_less(list->type, iter->data, data)) {
             prev = iter;
             iter = iter->next;
         }
