@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-#include "data_type.h"
+#include "type.h"
 
 // ListSingle
 
@@ -14,13 +14,14 @@ typedef struct ListSingleNode {
 } ListSingleNode;
 
 typedef struct {
-    DataType data_type;
+    Type type;
     ListSingleNode *head;
 } ListSingle;
 
-ListSingle list_single_create(DataType data_type);
+ListSingle list_single_construct(Type *type);
 void list_single_add(ListSingle *list, void *data);
 void list_single_remove(ListSingle *list, ListSingleNode *node);
+ListSingle list_single_destruct(ListSingle *list);
 
 
 // ListDouble
@@ -32,14 +33,15 @@ typedef struct ListDoubleNode {
 } ListDoubleNode;
 
 typedef struct {
-    DataType data_type;
+    Type type;
     ListDoubleNode *head;
     ListDoubleNode *tail;
 } ListDouble;
 
-ListDouble list_double_create(DataType data_type);
+ListDouble list_double_construct(Type *type);
 void list_double_add(ListDouble *list, void *data);
 void list_double_remove(ListDouble *list, ListDoubleNode *node);
+ListDouble list_double_destruct(ListDouble *list);
 
 
 // ListCircle
@@ -47,9 +49,10 @@ void list_double_remove(ListDouble *list, ListDoubleNode *node);
 typedef ListSingleNode ListCircleNode;
 typedef ListSingle ListCircle;
 
-ListCircle list_circle_create(DataType data_type);
+ListCircle list_circle_construct(Type *type);
 void list_circle_add(ListCircle *list, void *data);
 void list_circle_remove(ListCircle *list, ListCircleNode *node);
+ListCircle list_circle_destruct(ListCircle *list);
 
 
 // ListSingleOrdered
@@ -57,16 +60,16 @@ void list_circle_remove(ListCircle *list, ListCircleNode *node);
 typedef ListSingleNode ListSingleOrderedNode;
 
 typedef struct {
-    DataType data_type;
+    Type type;
     ListSingleOrderedNode *head;
 } ListSingleOrdered;
 
-ListSingleOrdered list_single_ordered_create(DataType data_type);
+ListSingleOrdered list_single_ordered_construct(Type *type);
 void list_single_ordered_add(ListSingleOrdered *list, void *data);
 void list_single_ordered_remove(
     ListSingleOrdered *list, ListSingleOrderedNode *node
 );
-void list_single_ordered_destroy(ListSingleOrdered *list);
+void list_single_ordered_destruct(ListSingleOrdered *list);
 
 
 // ListDoubleOrdered
@@ -74,17 +77,17 @@ void list_single_ordered_destroy(ListSingleOrdered *list);
 typedef ListDoubleNode ListDoubleOrderedNode;
 
 typedef struct {
-    DataType data_type;
+    Type type;
     ListDoubleOrderedNode *head;
     ListDoubleOrderedNode *tail;
 } ListDoubleOrdered;
 
-ListDoubleOrdered list_double_ordered_create(DataType data_type);
+ListDoubleOrdered list_double_ordered_construct(Type *type);
 void list_double_ordered_add(ListDoubleOrdered *list, void *data);
 void list_double_ordered_remove(
     ListDoubleOrdered *list, ListDoubleOrderedNode *node
 );
-void list_double_ordered_destroy(ListDoubleOrdered *list);
+void list_double_ordered_destruct(ListDoubleOrdered *list);
 
 
 #endif
